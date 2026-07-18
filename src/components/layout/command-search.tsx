@@ -52,7 +52,7 @@ export function CommandSearch() {
   const go = useCallback(
     (slug: string) => {
       close();
-      router.push(`/tools/${slug}`);
+      router.push(`/tools/${slug}/`);
     },
     [close, router],
   );

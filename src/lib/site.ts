@@ -4,4 +4,4 @@ export const SITE_TAGLINE =
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://devtools.sartajalam.in";
 export const SITE_DESCRIPTION =
-  "A clean multi-purpose developer utilities platform: JSON formatter, Base64, JWT decoder, regex tester, timestamp converter, and 20+ more tools. Everything runs locally in your browser.";
+  "Free online developer utilities: JSON formatter, Base64, JWT decoder, QR code generator, regex tester, timestamp converter, and 20+ more tools. Everything runs privately in your browser.";

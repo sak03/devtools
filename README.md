@@ -55,3 +55,13 @@ npm run build   # writes to out/
 ## Privacy
 
 All transforms are client-side. Prefer pure helpers in `src/lib/tools/transforms.ts` so logic stays testable.
+
+## SEO / Google Search Console
+
+1. Confirm pages load, e.g. `https://devtools.sartajalam.in/tools/qr/`
+2. Open [Google Search Console](https://search.google.com/search-console) → add property `devtools.sartajalam.in`
+3. Submit sitemap: `https://devtools.sartajalam.in/sitemap.xml`
+4. Use **URL Inspection → Request indexing** for key tools (JSON, QR, Base64, JWT)
+5. Link to DevTools from [sartajalam.in](https://sartajalam.in) for a first-party backlink
+
+Google indexes each tool URL separately (e.g. `/tools/qr/`), never `localhost`. Ranking competitive queries takes time beyond technical SEO.

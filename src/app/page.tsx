@@ -131,7 +131,7 @@ export default function HomePage() {
                   return (
                     <li key={tool.slug}>
                       <Link
-                        href={`/tools/${tool.slug}`}
+                        href={`/tools/${tool.slug}/`}
                         className="group flex h-full gap-3 rounded-xl border border-border bg-surface/60 p-4 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:bg-surface-hover"
                       >
                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-bg text-accent transition-colors group-hover:border-accent/30">

@@ -57,6 +57,34 @@ export function ToolShell({ tool, children, toolbar }: ToolShellProps) {
 
       <div className="space-y-4">{children}</div>
 
+      <section className="mt-10 space-y-4 border-t border-border pt-8">
+        <h2 className="text-lg font-semibold text-foreground">
+          About this tool
+        </h2>
+        <p className="max-w-3xl text-sm leading-relaxed text-muted">
+          {tool.seoIntro}
+        </p>
+        {tool.seoFaq.length > 0 ? (
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-foreground">
+              Frequently asked questions
+            </h3>
+            <dl className="space-y-4">
+              {tool.seoFaq.map((item) => (
+                <div key={item.question}>
+                  <dt className="text-sm font-medium text-foreground">
+                    {item.question}
+                  </dt>
+                  <dd className="mt-1 text-sm leading-relaxed text-muted">
+                    {item.answer}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ) : null}
+      </section>
+
       {related.length > 0 ? (
         <aside className="mt-10 border-t border-border pt-6">
           <h2 className="mb-3 text-sm font-medium text-foreground">
@@ -66,7 +94,7 @@ export function ToolShell({ tool, children, toolbar }: ToolShellProps) {
             {related.map((r) => (
               <li key={r.slug}>
                 <Link
-                  href={`/tools/${r.slug}`}
+                  href={`/tools/${r.slug}/`}
                   className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
                 >
                   <r.icon className="h-3.5 w-3.5 text-accent" aria-hidden />

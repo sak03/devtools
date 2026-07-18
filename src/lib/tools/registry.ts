@@ -21,9 +21,10 @@ import {
   Type,
   WholeWord,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import type { ToolCategory } from "@/lib/tools/types";
 import { CATEGORY_LABELS } from "@/lib/tools/types";
+import { toolSeoContent, type SeoFaq } from "@/lib/tools/seo-content";
+import type { LucideIcon } from "lucide-react";
 
 export type ToolMeta = {
   slug: string;
@@ -33,15 +34,28 @@ export type ToolMeta = {
   category: ToolCategory;
   icon: LucideIcon;
   relatedSlugs: string[];
+  seoTitle: string;
+  seoIntro: string;
+  seoFaq: SeoFaq[];
 };
 
-export const tools: ToolMeta[] = [
+type ToolBase = Omit<ToolMeta, "seoTitle" | "seoIntro" | "seoFaq">;
+
+function withSeo(tool: ToolBase): ToolMeta {
+  const seo = toolSeoContent[tool.slug];
+  if (!seo) {
+    throw new Error(`Missing SEO content for tool: ${tool.slug}`);
+  }
+  return { ...tool, ...seo };
+}
+
+const toolBases: ToolBase[] = [
   {
     slug: "base64",
     name: "Base64 Encode / Decode",
     description:
-      "Encode and decode Base64 strings with UTF-8 support. Runs entirely in your browser.",
-    keywords: ["base64", "encode", "decode", "utf-8", "binary"],
+      "Free online Base64 encoder and decoder with UTF-8 support. Runs entirely in your browser—nothing is uploaded.",
+    keywords: ["base64", "encode", "decode", "utf-8", "binary", "free"],
     category: "encode",
     icon: Binary,
     relatedSlugs: ["url-encode", "html-entities", "image-base64"],
@@ -50,8 +64,8 @@ export const tools: ToolMeta[] = [
     slug: "url-encode",
     name: "URL Encode / Decode",
     description:
-      "Percent-encode and decode URLs and query strings with encodeURIComponent semantics.",
-    keywords: ["url", "encode", "decode", "percent", "query string"],
+      "Free URL encode and decode tool for query strings and percent-encoding. Private, instant, browser-only.",
+    keywords: ["url", "encode", "decode", "percent", "query string", "free"],
     category: "encode",
     icon: Link2,
     relatedSlugs: ["base64", "html-entities"],
@@ -60,8 +74,8 @@ export const tools: ToolMeta[] = [
     slug: "html-entities",
     name: "HTML Entity Encode / Decode",
     description:
-      "Convert special characters to HTML entities and back. Supports named and numeric entities.",
-    keywords: ["html", "entities", "escape", "unescape", "xss"],
+      "Convert special characters to HTML entities and back. Free, private, and runs in your browser.",
+    keywords: ["html", "entities", "escape", "unescape", "xss", "free"],
     category: "encode",
     icon: Code2,
     relatedSlugs: ["url-encode", "html"],
@@ -70,8 +84,8 @@ export const tools: ToolMeta[] = [
     slug: "jwt-decode",
     name: "JWT Decoder",
     description:
-      "Decode JWT header and payload for inspection. Does not verify signatures.",
-    keywords: ["jwt", "json web token", "decode", "header", "payload"],
+      "Free online JWT decoder to inspect header and payload. Does not verify signatures. Fully client-side.",
+    keywords: ["jwt", "json web token", "decode", "header", "payload", "free"],
     category: "encode",
     icon: Shield,
     relatedSlugs: ["json", "base64", "hash"],
@@ -80,8 +94,8 @@ export const tools: ToolMeta[] = [
     slug: "json",
     name: "JSON Formatter & Validator",
     description:
-      "Pretty-print, minify, and validate JSON with clear error messages.",
-    keywords: ["json", "formatter", "validator", "pretty print", "minify"],
+      "Free online JSON formatter, validator, and minifier with clear errors. Pretty-print API responses in your browser.",
+    keywords: ["json", "formatter", "validator", "pretty print", "minify", "free"],
     category: "format",
     icon: FileJson,
     relatedSlugs: ["yaml-json", "jwt-decode", "xml"],
@@ -90,8 +104,8 @@ export const tools: ToolMeta[] = [
     slug: "yaml-json",
     name: "YAML ↔ JSON Converter",
     description:
-      "Convert between YAML and JSON bidirectionally with validation.",
-    keywords: ["yaml", "json", "converter", "yml", "config"],
+      "Free YAML to JSON and JSON to YAML converter with validation. Ideal for configs—processed locally.",
+    keywords: ["yaml", "json", "converter", "yml", "config", "free"],
     category: "format",
     icon: FileCode2,
     relatedSlugs: ["json", "xml"],
@@ -99,8 +113,9 @@ export const tools: ToolMeta[] = [
   {
     slug: "xml",
     name: "XML Formatter",
-    description: "Pretty-print and minify XML documents in your browser.",
-    keywords: ["xml", "formatter", "pretty print", "minify"],
+    description:
+      "Free online XML beautifier and minifier. Format documents privately in your browser.",
+    keywords: ["xml", "formatter", "pretty print", "minify", "free"],
     category: "format",
     icon: FileType,
     relatedSlugs: ["json", "html", "yaml-json"],
@@ -109,8 +124,8 @@ export const tools: ToolMeta[] = [
     slug: "sql",
     name: "SQL Formatter",
     description:
-      "Beautify SQL queries with dialect support for PostgreSQL, MySQL, and SQLite.",
-    keywords: ["sql", "formatter", "postgres", "mysql", "sqlite"],
+      "Free SQL formatter with PostgreSQL, MySQL, and SQLite dialects. Beautify queries in your browser.",
+    keywords: ["sql", "formatter", "postgres", "mysql", "sqlite", "free"],
     category: "format",
     icon: ScrollText,
     relatedSlugs: ["json", "text-case"],
@@ -118,8 +133,9 @@ export const tools: ToolMeta[] = [
   {
     slug: "css",
     name: "CSS Beautify / Minify",
-    description: "Format or minify CSS stylesheets instantly.",
-    keywords: ["css", "beautify", "minify", "stylesheet"],
+    description:
+      "Free CSS beautify and minify tool. Format or compress stylesheets instantly in your browser.",
+    keywords: ["css", "beautify", "minify", "stylesheet", "free"],
     category: "format",
     icon: Palette,
     relatedSlugs: ["html", "json"],
@@ -127,8 +143,9 @@ export const tools: ToolMeta[] = [
   {
     slug: "html",
     name: "HTML Beautify / Minify",
-    description: "Pretty-print or compress HTML markup.",
-    keywords: ["html", "beautify", "minify", "markup"],
+    description:
+      "Free HTML beautifier and minifier. Pretty-print or compress markup locally.",
+    keywords: ["html", "beautify", "minify", "markup", "free"],
     category: "format",
     icon: Code2,
     relatedSlugs: ["css", "html-entities", "markdown"],
@@ -137,8 +154,8 @@ export const tools: ToolMeta[] = [
     slug: "markdown",
     name: "Markdown Preview",
     description:
-      "Write Markdown and preview sanitized HTML side by side.",
-    keywords: ["markdown", "preview", "md", "commonmark"],
+      "Free online Markdown preview with sanitized HTML. Write and preview side by side—nothing uploaded.",
+    keywords: ["markdown", "preview", "md", "commonmark", "free"],
     category: "format",
     icon: FileCode2,
     relatedSlugs: ["html", "diff"],
@@ -147,8 +164,8 @@ export const tools: ToolMeta[] = [
     slug: "text-case",
     name: "Text Case Converter",
     description:
-      "Convert text between camelCase, PascalCase, snake_case, kebab-case, and more.",
-    keywords: ["case", "camelCase", "snake_case", "kebab", "pascal"],
+      "Free case converter for camelCase, PascalCase, snake_case, kebab-case, and more.",
+    keywords: ["case", "camelCase", "snake_case", "kebab", "pascal", "free"],
     category: "text",
     icon: CaseSensitive,
     relatedSlugs: ["counter", "lorem"],
@@ -157,8 +174,8 @@ export const tools: ToolMeta[] = [
     slug: "diff",
     name: "Diff Checker",
     description:
-      "Compare two texts with unified and side-by-side diff views.",
-    keywords: ["diff", "compare", "text", "changes", "patch"],
+      "Free online text diff checker with line and word views. Compare snippets privately.",
+    keywords: ["diff", "compare", "text", "changes", "patch", "free"],
     category: "text",
     icon: Diff,
     relatedSlugs: ["json", "markdown"],
@@ -167,8 +184,8 @@ export const tools: ToolMeta[] = [
     slug: "lorem",
     name: "Lorem Ipsum Generator",
     description:
-      "Generate placeholder words, sentences, or paragraphs for mockups.",
-    keywords: ["lorem", "ipsum", "placeholder", "dummy text"],
+      "Free lorem ipsum generator for words, sentences, or paragraphs. Instant placeholder copy.",
+    keywords: ["lorem", "ipsum", "placeholder", "dummy text", "free"],
     category: "text",
     icon: Type,
     relatedSlugs: ["text-case", "counter", "password"],
@@ -177,8 +194,8 @@ export const tools: ToolMeta[] = [
     slug: "counter",
     name: "Word & Character Counter",
     description:
-      "Count words, characters, lines, and bytes as you type.",
-    keywords: ["word count", "character count", "bytes", "lines"],
+      "Free word and character counter with lines and byte size. Updates as you type.",
+    keywords: ["word count", "character count", "bytes", "lines", "free"],
     category: "text",
     icon: WholeWord,
     relatedSlugs: ["text-case", "lorem"],
@@ -187,8 +204,8 @@ export const tools: ToolMeta[] = [
     slug: "regex",
     name: "Regex Tester",
     description:
-      "Test regular expressions with live matches and replace preview.",
-    keywords: ["regex", "regexp", "regular expression", "match", "replace"],
+      "Free online regex tester with live matches and replace preview. JavaScript flavor, browser-only.",
+    keywords: ["regex", "regexp", "regular expression", "match", "replace", "free"],
     category: "text",
     icon: Regex,
     relatedSlugs: ["text-case", "diff"],
@@ -197,8 +214,8 @@ export const tools: ToolMeta[] = [
     slug: "timestamp",
     name: "Unix Timestamp Converter",
     description:
-      "Convert between Unix timestamps and human-readable dates in any timezone.",
-    keywords: ["unix", "timestamp", "epoch", "date", "timezone"],
+      "Free Unix timestamp converter for epoch seconds/milliseconds to dates and back.",
+    keywords: ["unix", "timestamp", "epoch", "date", "timezone", "free"],
     category: "time",
     icon: Clock,
     relatedSlugs: ["cron", "uuid"],
@@ -207,8 +224,8 @@ export const tools: ToolMeta[] = [
     slug: "cron",
     name: "Cron Expression Explainer",
     description:
-      "Translate cron expressions into plain English and preview next runs.",
-    keywords: ["cron", "schedule", "crontab", "expression"],
+      "Free cron expression explainer with plain-English meaning and next run times.",
+    keywords: ["cron", "schedule", "crontab", "expression", "free"],
     category: "time",
     icon: CalendarClock,
     relatedSlugs: ["timestamp"],
@@ -216,8 +233,9 @@ export const tools: ToolMeta[] = [
   {
     slug: "uuid",
     name: "UUID Generator",
-    description: "Generate UUID v4 (and v7) identifiers in bulk.",
-    keywords: ["uuid", "guid", "v4", "v7", "identifier"],
+    description:
+      "Free online UUID generator for v4 and v7, including bulk generation.",
+    keywords: ["uuid", "guid", "v4", "v7", "identifier", "free"],
     category: "time",
     icon: Fingerprint,
     relatedSlugs: ["hash", "password"],
@@ -226,8 +244,8 @@ export const tools: ToolMeta[] = [
     slug: "hash",
     name: "Hash Generator",
     description:
-      "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text.",
-    keywords: ["hash", "md5", "sha256", "sha512", "checksum"],
+      "Free hash generator for MD5, SHA-1, SHA-256, and SHA-512. Checksums computed locally.",
+    keywords: ["hash", "md5", "sha256", "sha512", "checksum", "free"],
     category: "time",
     icon: Hash,
     relatedSlugs: ["uuid", "password", "jwt-decode"],
@@ -236,8 +254,8 @@ export const tools: ToolMeta[] = [
     slug: "number-base",
     name: "Number Base Converter",
     description:
-      "Convert numbers between binary, octal, decimal, and hexadecimal.",
-    keywords: ["binary", "hex", "octal", "decimal", "radix"],
+      "Free binary, octal, decimal, and hex converter for developers.",
+    keywords: ["binary", "hex", "octal", "decimal", "radix", "free"],
     category: "time",
     icon: Binary,
     relatedSlugs: ["hash", "color"],
@@ -246,8 +264,8 @@ export const tools: ToolMeta[] = [
     slug: "color",
     name: "Color Converter",
     description:
-      "Convert colors between HEX, RGB, and HSL with a live preview.",
-    keywords: ["color", "hex", "rgb", "hsl", "converter"],
+      "Free HEX, RGB, and HSL color converter with live preview.",
+    keywords: ["color", "hex", "rgb", "hsl", "converter", "free"],
     category: "visual",
     icon: Palette,
     relatedSlugs: ["css", "number-base"],
@@ -255,8 +273,9 @@ export const tools: ToolMeta[] = [
   {
     slug: "qr",
     name: "QR Code Generator",
-    description: "Generate QR codes from text or URLs and download as PNG.",
-    keywords: ["qr", "qrcode", "barcode", "generator"],
+    description:
+      "Free online QR code generator for text, URLs, Wi‑Fi, email, phone, and SMS. Download PNG or SVG—private and reliable.",
+    keywords: ["qr", "qr code", "qrcode", "generator", "wifi qr", "free", "svg"],
     category: "visual",
     icon: QrCode,
     relatedSlugs: ["url-encode", "image-base64"],
@@ -265,8 +284,8 @@ export const tools: ToolMeta[] = [
     slug: "image-base64",
     name: "Image → Base64",
     description:
-      "Convert images to Base64 data URIs via drag and drop. Nothing is uploaded.",
-    keywords: ["image", "base64", "data uri", "embed"],
+      "Free image to Base64 converter with drag and drop. Creates data URIs locally—nothing uploaded.",
+    keywords: ["image", "base64", "data uri", "embed", "free"],
     category: "visual",
     icon: Image,
     relatedSlugs: ["base64", "qr"],
@@ -275,13 +294,15 @@ export const tools: ToolMeta[] = [
     slug: "password",
     name: "Password Generator",
     description:
-      "Generate strong random passwords with length and charset controls.",
-    keywords: ["password", "generator", "secure", "random"],
+      "Free strong password generator with length and charset controls. Uses crypto.getRandomValues—never stored.",
+    keywords: ["password", "generator", "secure", "random", "free"],
     category: "visual",
     icon: KeyRound,
     relatedSlugs: ["uuid", "hash"],
   },
 ];
+
+export const tools: ToolMeta[] = toolBases.map(withSeo);
 
 const bySlug = new Map(tools.map((t) => [t.slug, t]));
 
